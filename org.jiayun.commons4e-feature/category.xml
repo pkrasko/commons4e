@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.jiayun.commons4e_1.1.11.jar" id="org.jiayun.commons4e" version="1.1.11">
+      <category name="commons4e"/>
+   </feature>
+   <category-def name="commons4e" label="Commons4e"/>
+</site>
