@@ -152,7 +152,7 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
                 objectClass, source);
 
         objectClass.getCompilationUnit().createImport(
-                "org.apache.commons.lang.builder.EqualsBuilder", null, null);
+                "org.apache.commons.lang3.builder.EqualsBuilder", null, null);
         IJavaElement created = objectClass.createMethod(formattedContent,
                 insertPosition, true, null);
 
@@ -226,7 +226,7 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
                 objectClass, source);
 
         objectClass.getCompilationUnit().createImport(
-                "org.apache.commons.lang.builder.HashCodeBuilder", null, null);
+                "org.apache.commons.lang3.builder.HashCodeBuilder", null, null);
         IJavaElement created = objectClass.createMethod(formattedContent,
                 insertPosition, true, null);
 

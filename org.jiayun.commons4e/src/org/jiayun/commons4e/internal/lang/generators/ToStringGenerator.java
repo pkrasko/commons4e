@@ -33,7 +33,7 @@ import org.jiayun.commons4e.internal.util.PreferenceUtils;
  */
 public final class ToStringGenerator implements ILangGenerator {
 
-    private static final String STYLE_PREFIX = "org.apache.commons.lang.builder.ToStringStyle";
+    private static final String STYLE_PREFIX = "org.apache.commons.lang3.builder.ToStringStyle";
 
     private static final String DEFAULT_STYLE = STYLE_PREFIX + "."
             + "DEFAULT_STYLE";
@@ -142,7 +142,7 @@ public final class ToStringGenerator implements ILangGenerator {
                 objectClass, source);
 
         objectClass.getCompilationUnit().createImport(
-                "org.apache.commons.lang.builder.ToStringBuilder", null, null);
+                "org.apache.commons.lang3.builder.ToStringBuilder", null, null);
         IMethod created = objectClass.createMethod(formattedContent,
                 insertPosition, true, null);
 
