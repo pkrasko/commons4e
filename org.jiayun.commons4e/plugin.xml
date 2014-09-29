@@ -8,7 +8,7 @@
             objectClass="org.eclipse.jdt.core.IType"
             id="org.jiayun.commons4e.lang.LangActions">
          <menu
-               label="Commons4E Lang"
+               label="Commons Lang 3"
                path="additions"
                id="langMenu">
             <separator name="langGroup"/>
@@ -33,7 +33,7 @@
             targetID="#CompilationUnitEditorContext"
             id="org.jiayun.commons4e.lang.LangActions">
          <menu
-               label="Commons4E Lang"
+               label="Commons Lang 3"
                path="additions"
                id="langMenu">
             <separator name="langGroup"/>
@@ -60,7 +60,7 @@
       <page
             class="org.jiayun.commons4e.internal.ui.preferences.Commons4eBasePreferencePage"
             category="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"
-            name="Commons4E"
+            name="Commons Lang 3"
             id="org.jiayun.commons4e.ui.preferences.Commons4eBasePreferencePage"/>
    </extension>
    <extension

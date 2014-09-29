@@ -12,7 +12,6 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -59,7 +58,7 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jiayun.commons4e.internal.lang.generators.ILangGenerator#generate(org.eclipse.swt.widgets.Shell,
      *      org.eclipse.jdt.core.IType)
      */
@@ -148,12 +147,14 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
                 appendSuper, generateComment, compareReferences, addOverride,
                 useGettersInsteadOfFields);
 
+        /*
         String formattedContent = JavaUtils.formatCode(parentShell,
                 objectClass, source);
+		*/
 
         objectClass.getCompilationUnit().createImport(
                 "org.apache.commons.lang3.builder.EqualsBuilder", null, null);
-        IJavaElement created = objectClass.createMethod(formattedContent,
+        IJavaElement created = objectClass.createMethod(source,
                 insertPosition, true, null);
 
         return created;
@@ -177,27 +178,38 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
         }
         content.append("public boolean equals(final Object other) {\n");
         if (compareReferences) {
-            content.append("if (this == other) return true;");
+            content.append("    if (this == other) {\n");
+            content.append("        return true;\n");
+            content.append("    }\n");
         }
-        content.append("if ( !(other instanceof ");
+
+        content.append("    if (other == null) {\n");
+        content.append("        return false;\n");
+        content.append("    }\n");
+
+        content.append("    if (getClass() != other.getClass()) {\n");
+        content.append("        return false;\n");
+        content.append("    }\n");
+
+
+        content.append("    final ");
         content.append(objectClass.getElementName());
-        content.append(") ) return false;\n");
+        content.append(" rhs = (");
         content.append(objectClass.getElementName());
-        content.append(" castOther = (");
-        content.append(objectClass.getElementName());
-        content.append(") other;\n");
-        content.append("return new EqualsBuilder()");
+        content.append(")other;\n");
+
+        content.append("    return new EqualsBuilder()\n");
         if (appendSuper) {
-            content.append(".appendSuper(super.equals(other))");
+            content.append("            .appendSuper(super.equals(other))\n");
         }
         for (int i = 0; i < checkedFields.length; i++) {
-            content.append(".append(");
+            content.append("            .append(this.");
             content.append(JavaUtils.generateFieldAccessor(checkedFields[i], useGettersInsteadOfFields));
-            content.append(", castOther.");
+            content.append(", rhs.");
             content.append(JavaUtils.generateFieldAccessor(checkedFields[i], useGettersInsteadOfFields));
-            content.append(")");
+            content.append(")\n");
         }
-        content.append(".isEquals();\n");
+        content.append("            .isEquals();\n");
         content.append("}\n\n");
 
         return content.toString();
@@ -222,12 +234,13 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
                 appendSuper, generateComment, imNumbers, isCacheable,
                 addOverride, useGettersInsteadOfFields);
 
+        /*
         String formattedContent = JavaUtils.formatCode(parentShell,
                 objectClass, source);
-
+        */
         objectClass.getCompilationUnit().createImport(
                 "org.apache.commons.lang3.builder.HashCodeBuilder", null, null);
-        IJavaElement created = objectClass.createMethod(formattedContent,
+        IJavaElement created = objectClass.createMethod(source,
                 insertPosition, true, null);
 
         String cachingField = PreferenceUtils.getHashCodeCachingField();
@@ -264,15 +277,15 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
         content.append("public int hashCode() {\n");
         if (isCacheable) {
             String cachingField = PreferenceUtils.getHashCodeCachingField();
-            content.append("if (" + cachingField + "== 0) {\n");
+            content.append("    if (" + cachingField + "== 0) {\n");
             content.append(cachingField + " = ");
             content.append(createHashCodeBuilderString(checkedFields,
                     appendSuper, imNumbers, useGettersInsteadOfFields));
-            content.append("}\n");
-            content.append("return " + cachingField + ";\n");
+            content.append("    }\n");
+            content.append("    return " + cachingField + ";\n");
 
         } else {
-            content.append("return ");
+            content.append("    return ");
             content.append(createHashCodeBuilderString(checkedFields,
                     appendSuper, imNumbers, useGettersInsteadOfFields));
         }
@@ -287,23 +300,23 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
         StringBuffer content = new StringBuffer();
         content.append("new HashCodeBuilder(");
         content.append(imNumbers.getValue());
-        content.append(")");
+        content.append(")\n");
         if (appendSuper) {
-            content.append(".appendSuper(super.hashCode())");
+            content.append("            .appendSuper(super.hashCode())\n");
         }
         for (int i = 0; i < checkedFields.length; i++) {
-            content.append(".append(");
+            content.append("            .append(this.");
             content.append(JavaUtils.generateFieldAccessor(checkedFields[i], useGettersInsteadOfFields));
-            content.append(")");
+            content.append(")\n");
         }
-        content.append(".toHashCode();\n");
+        content.append("            .toHashCode();\n");
 
         return content.toString();
     }
 
     private static class EqualsHashCodeDialog extends FieldDialog {
 
-        private boolean compareReferences;
+        private boolean compareReferences = true;
 
         private Button imButtons[] = new Button[3];
 
@@ -386,7 +399,7 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.window.Window#close()
          */
         public boolean close() {
@@ -400,7 +413,7 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.window.Window#create()
          */
         public void create() {
@@ -418,7 +431,7 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.jiayun.commons4e.internal.ui.dialogs.FieldDialog#createOptionComposite(org.eclipse.swt.widgets.Composite)
          */
         protected Composite createOptionComposite(Composite composite) {
@@ -673,7 +686,7 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.swt.events.VerifyListener#verifyText(org.eclipse.swt.events.VerifyEvent)
          */
         public void verifyText(VerifyEvent e) {
