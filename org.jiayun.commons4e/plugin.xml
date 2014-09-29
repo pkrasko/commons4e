@@ -14,17 +14,17 @@
             <separator name="langGroup"/>
          </menu>
          <action
-               label="Generate CompareTo Method..."
+               label="Generate compareTo()..."
                class="org.jiayun.commons4e.internal.lang.actions.GenerateAction"
                menubarPath="langMenu/langGroup"
                id="org.jiayun.commons4e.lang.actions.GenerateCompareToAction"/>
          <action
-               label="Generate ToString Method..."
+               label="Generate toString()..."
                class="org.jiayun.commons4e.internal.lang.actions.GenerateAction"
                menubarPath="langMenu/langGroup"
                id="org.jiayun.commons4e.lang.actions.GenerateToStringAction"/>
          <action
-               label="Generate Equals and HashCode..."
+               label="Generate equals() and hashCode()..."
                class="org.jiayun.commons4e.internal.lang.actions.GenerateAction"
                menubarPath="langMenu/langGroup"
                id="org.jiayun.commons4e.lang.actions.GenerateEqualsHashCodeAction"/>
@@ -39,17 +39,17 @@
             <separator name="langGroup"/>
          </menu>
          <action
-               label="Generate CompareTo Method..."
+               label="Generate compareTo()..."
                class="org.jiayun.commons4e.internal.lang.actions.ViewerContributionGenerateAction"
                menubarPath="langMenu/langGroup"
                id="org.jiayun.commons4e.lang.actions.GenerateCompareToAction"/>
          <action
-               label="Generate ToString Method..."
+               label="Generate toString()..."
                class="org.jiayun.commons4e.internal.lang.actions.ViewerContributionGenerateAction"
                menubarPath="langMenu/langGroup"
                id="org.jiayun.commons4e.lang.actions.GenerateToStringAction"/>
          <action
-               label="Generate Equals and HashCode..."
+               label="Generate equals() and hashCode()..."
                class="org.jiayun.commons4e.internal.lang.actions.ViewerContributionGenerateAction"
                menubarPath="langMenu/langGroup"
                id="org.jiayun.commons4e.lang.actions.GenerateEqualsHashCodeAction"/>

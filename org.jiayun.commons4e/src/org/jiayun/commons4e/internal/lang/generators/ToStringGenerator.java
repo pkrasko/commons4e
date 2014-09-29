@@ -65,7 +65,7 @@ public final class ToStringGenerator implements ILangGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jiayun.commons4e.internal.lang.generators.ILangGenerator#generate(org.eclipse.swt.widgets.Shell,
      *      org.eclipse.jdt.core.IType)
      */
@@ -245,7 +245,7 @@ public final class ToStringGenerator implements ILangGenerator {
         for (int i = 0; i < checkedFields.length; i++) {
             content.append(".append(\"");
             content.append(checkedFields[i].getElementName());
-            content.append("\", ");
+            content.append("\", this.");
             content.append(JavaUtils.generateFieldAccessor(checkedFields[i], useGettersInsteadOfFields));
             content.append(")");
         }
@@ -288,7 +288,7 @@ public final class ToStringGenerator implements ILangGenerator {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.window.Window#close()
          */
         public boolean close() {
@@ -299,7 +299,7 @@ public final class ToStringGenerator implements ILangGenerator {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.jiayun.commons4e.internal.ui.dialogs.FieldDialog#createOptionComposite(org.eclipse.swt.widgets.Composite)
          */
         protected Composite createOptionComposite(Composite composite) {

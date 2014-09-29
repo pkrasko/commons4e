@@ -40,7 +40,7 @@ public final class CompareToGenerator implements ILangGenerator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jiayun.commons4e.internal.lang.generators.ILangGenerator#generate(org.eclipse.swt.widgets.Shell,
      *      org.eclipse.jdt.core.IType)
      */
@@ -158,6 +158,7 @@ public final class CompareToGenerator implements ILangGenerator {
             content.append(" */\n");
         }
         String other;
+        content.append("@Override\n");
         if (generify) {
             content.append("public int compareTo(final "
                     + objectClass.getElementName() + " other) {\n");
@@ -177,11 +178,11 @@ public final class CompareToGenerator implements ILangGenerator {
             content.append(".appendSuper(super.compareTo(other))");
         }
         for (int i = 0; i < checkedFields.length; i++) {
-            content.append(".append(");
+            content.append(".append(this.");
             content.append(checkedFields[i].getElementName());
             content.append(", " + other + ".");
             content.append(checkedFields[i].getElementName());
-            content.append(")");
+            content.append(")\n");
         }
         content.append(".toComparison();\n");
         content.append("}\n\n");
