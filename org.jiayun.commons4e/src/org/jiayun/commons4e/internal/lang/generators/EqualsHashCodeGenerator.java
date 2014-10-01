@@ -249,10 +249,12 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
             field.delete(true, null);
         }
         if (isCacheable) {
-            String fieldSrc = "private transient int " + cachingField + ";\n\n";
+            String fieldSrc = "private transient int " + cachingField + ";\n";
+            /*
             String formattedFieldSrc = JavaUtils.formatCode(parentShell,
                     objectClass, fieldSrc);
-            created = objectClass.createField(formattedFieldSrc, created, true,
+            */
+            created = objectClass.createField(fieldSrc, created, true,
                     null);
         }
 
@@ -316,7 +318,7 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
 
     private static class EqualsHashCodeDialog extends FieldDialog {
 
-        private boolean compareReferences = true;
+        private boolean compareReferences;
 
         private Button imButtons[] = new Button[3];
 
@@ -374,6 +376,8 @@ public final class EqualsHashCodeGenerator implements ILangGenerator {
             if (hashCodeSettings == null) {
                 hashCodeSettings = dialogSettings
                         .addNewSection(HASHCODE_SETTINGS_SECTION);
+                // set the default to true
+                hashCodeSettings.put(SETTINGS_COMPARE_REFERENCES, true);
             }
 
             try {

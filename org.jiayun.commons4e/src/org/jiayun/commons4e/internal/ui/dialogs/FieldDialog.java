@@ -13,10 +13,13 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.swt.SWT;
@@ -34,13 +37,15 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.jiayun.commons4e.Commons4ePlugin;
 import org.jiayun.commons4e.internal.util.JavaUtils;
 import org.jiayun.commons4e.internal.util.PreferenceUtils;
 
 /*
  * This class contains some code from
- *      org.eclipse.jdt.internal.ui.dialogs.SourceActionDialog 
+ *      org.eclipse.jdt.internal.ui.dialogs.SourceActionDialog
  */
 /**
  * @author jiayun
@@ -143,11 +148,42 @@ public class FieldDialog extends Dialog {
                 objectClass.getMethods(), excludedMethods).toArray(
                 new IMethod[0]);
 
-        insertPositions.add(methods.length > 0 ? methods[0] : null); // first
-        insertPositions.add(null); // last
+        final ITextEditor editor = (ITextEditor)PlatformUI.getWorkbench()
+        		.getActiveWorkbenchWindow()
+        		.getActivePage()
+        		.getActiveEditor();
+
+        final ITextSelection selection = (ITextSelection)editor
+        		.getSelectionProvider()
+        		.getSelection();
+
+
+        final ITypeRoot root = (ITypeRoot)JavaUI.getEditorInputJavaElement(
+        		editor.getEditorInput());
+
+
+        if (root != null) {
+        	final IJavaElement element = root.getElementAt(selection.getOffset());
+            if (element != null) {
+            	int methodStart = selection.getOffset();
+            	IMethod methodToInsertAfter = null;  // null also means end of file
+            	for (int i = methods.length - 1; i >= 0; i--) {
+                	IMethod m = (IMethod) methods[i];
+                	if (methodStart >= m.getSourceRange().getOffset()) {
+                    	break;
+                    }
+                    methodToInsertAfter = m;
+                }
+            	insertPositionLabels.add("Cursor position");
+            	insertPositions.add(methodToInsertAfter); // current cursor position
+            }
+        }
 
         insertPositionLabels.add("First method");
+        insertPositions.add(methods.length > 0 ? methods[0] : null); // first
+
         insertPositionLabels.add("Last method");
+        insertPositions.add(null); // last
 
         for (int i = 0; i < methods.length; i++) {
             IMethod curr = methods[i];
@@ -190,7 +226,7 @@ public class FieldDialog extends Dialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.window.Window#close()
      */
     public boolean close() {
@@ -212,7 +248,7 @@ public class FieldDialog extends Dialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     protected void configureShell(Shell newShell) {
@@ -222,7 +258,7 @@ public class FieldDialog extends Dialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     protected Control createDialogArea(final Composite parent) {
@@ -383,7 +419,7 @@ public class FieldDialog extends Dialog {
     private Composite addAppendSuperOption(final Composite composite) {
 
         Button appendButton = new Button(composite, SWT.CHECK);
-        appendButton.setText("A&ppend super");
+        appendButton.setText("Append super");
         appendButton
                 .setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 
